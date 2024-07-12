@@ -26,5 +26,15 @@ class UsersRegisterApplicationTests {
 		assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 	}
 
+	@Test
+	void shouldNotCreateUserIfEmailExists() {
+		CreateUserRequest newUserRequest = new CreateUserRequest();
+		newUserRequest.setEmail("test1@test1.com");
+		newUserRequest.setPassword("P4s$word");
+		ResponseEntity<?> createResponse = restTemplate.postForEntity("/api/users", newUserRequest, UserDTO.class);
+		assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
+		ResponseEntity<?> secondCreateResponse = restTemplate.postForEntity("/api/users", newUserRequest, UserDTO.class);
+		assertThat(secondCreateResponse.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+	}
 }
