@@ -9,6 +9,7 @@ import com.challenge.users_register.utils.JwtTokenUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Value("${validation.password.regex}")
     private String passwordRegex;
 
@@ -35,7 +39,7 @@ public class UserServiceImpl implements UserService {
         } else {
             User newUser = new User();
             newUser.setEmail(createUserRequest.getEmail());
-            newUser.setPassword(createUserRequest.getPassword());
+            newUser.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
             newUser.setPhones(createUserRequest.getPhones());
 
             for (Phone phone: newUser.getPhones()) {
