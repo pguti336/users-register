@@ -1,6 +1,7 @@
 package com.challenge.users_register.service;
 
 import com.challenge.users_register.exception.UserAlreadyExistsException;
+import com.challenge.users_register.model.Phone;
 import com.challenge.users_register.model.User;
 import com.challenge.users_register.repository.UserRepository;
 import lombok.SneakyThrows;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             throw new UserAlreadyExistsException("User email already exists.");
         } else {
+            for (Phone phone: user.getPhones()) {
+                phone.setUser(user);
+            }
             return userRepository.save(user);
         }
     }
