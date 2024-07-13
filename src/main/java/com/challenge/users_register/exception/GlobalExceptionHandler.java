@@ -18,4 +18,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidArgument(MethodArgumentNotValidException exception) {
+        Map<String, String> map =  new HashMap<>();
+        exception.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            map.put(fieldError.getField(), fieldError.getDefaultMessage());
+        });
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
+    }
+
 }

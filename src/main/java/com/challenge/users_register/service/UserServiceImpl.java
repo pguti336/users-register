@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
             newUser.setPassword(createUserRequest.getPassword());
             newUser.setPhones(createUserRequest.getPhones());
 
-            for (Phone phone: createUserRequest.getPhones()) {
+            for (Phone phone: newUser.getPhones()) {
                 phone.setUser(newUser);
             }
 

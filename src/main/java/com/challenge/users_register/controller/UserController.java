@@ -5,6 +5,7 @@ import com.challenge.users_register.dto.UserDTO;
 import com.challenge.users_register.exception.ErrorResponse;
 import com.challenge.users_register.model.User;
 import com.challenge.users_register.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UserController {
     private ModelMapper modelMapper;
 
     @PostMapping("/users")
-    private ResponseEntity<?> createUser(@RequestBody CreateUserRequest createUserRequest) {
+    private ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
         if (!userService.isValidPassword(createUserRequest.getPassword())) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Password does not match with requirements."));
         }
