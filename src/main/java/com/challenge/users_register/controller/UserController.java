@@ -2,6 +2,7 @@ package com.challenge.users_register.controller;
 
 import com.challenge.users_register.dto.CreateUserRequest;
 import com.challenge.users_register.dto.UserDTO;
+import com.challenge.users_register.exception.ErrorResponse;
 import com.challenge.users_register.model.User;
 import com.challenge.users_register.repository.UserRepository;
 import com.challenge.users_register.service.UserService;
@@ -24,7 +25,12 @@ public class UserController {
     private ModelMapper modelMapper;
 
     @PostMapping("/users")
-    private ResponseEntity<UserDTO> createUser(@RequestBody CreateUserRequest createUserRequest) {
+    private ResponseEntity<?> createUser(@RequestBody CreateUserRequest createUserRequest) {
+
+        if (!userService.isValidPassword(createUserRequest.getPassword())) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("Password does not match with requirements."));
+        }
+
         User newUserRequest = new User();
         newUserRequest.setEmail(createUserRequest.getEmail());
         newUserRequest.setPassword(createUserRequest.getPassword());

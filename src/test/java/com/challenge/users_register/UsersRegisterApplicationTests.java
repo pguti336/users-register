@@ -37,4 +37,13 @@ class UsersRegisterApplicationTests {
 		ResponseEntity<?> secondCreateResponse = restTemplate.postForEntity("/api/users", newUserRequest, UserDTO.class);
 		assertThat(secondCreateResponse.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 	}
+
+	@Test
+	void shouldNotCreateUserIfPasswordIsWeak() {
+		CreateUserRequest newUserRequest = new CreateUserRequest();
+		newUserRequest.setEmail("test@test.com");
+		newUserRequest.setPassword("password");
+		ResponseEntity<UserDTO> createResponse = restTemplate.postForEntity("/api/users", newUserRequest, UserDTO.class);
+		assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+	}
 }
