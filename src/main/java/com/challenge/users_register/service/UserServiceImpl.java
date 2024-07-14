@@ -5,15 +5,14 @@ import com.challenge.users_register.exception.UserAlreadyExistsException;
 import com.challenge.users_register.model.Phone;
 import com.challenge.users_register.model.User;
 import com.challenge.users_register.repository.UserRepository;
-import com.challenge.users_register.utils.JwtTokenUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,13 +21,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Value("${validation.password.regex}")
     private String passwordRegex;
+    @Autowired
+    private AuthService authService;
+
+    @Override
+    public Optional<User> findById(UUID uuid) {
+        return userRepository.findById(uuid);
+    }
 
     @SneakyThrows
     @Override
@@ -46,9 +49,8 @@ public class UserServiceImpl implements UserService {
                 phone.setUser(newUser);
             }
 
-            final String token = jwtTokenUtil.generateToken(createUserRequest.getEmail());
+            final String token = authService.generateToken(newUser);
             newUser.setToken(token);
-            newUser.setLastLogin(Instant.now());
 
             return userRepository.save(newUser);
         }
@@ -61,5 +63,10 @@ public class UserServiceImpl implements UserService {
 
     public boolean isValidPassword(String password) {
         return password.matches(passwordRegex);
+    }
+
+    @Override
+    public User update(User user) {
+        return userRepository.save(user);
     }
 }

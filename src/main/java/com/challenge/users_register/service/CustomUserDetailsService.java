@@ -1,6 +1,7 @@
 package com.challenge.users_register.service;
 
 import com.challenge.users_register.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -28,4 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .accountLocked(!user.get().isActive())
                         .build();
     }
+
+
+
 }
