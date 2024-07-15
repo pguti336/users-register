@@ -2,6 +2,8 @@ package com.challenge.users_register.utils;
 
 import com.challenge.users_register.dto.CreateUserRequest;
 import com.challenge.users_register.model.Phone;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;

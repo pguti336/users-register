@@ -1,6 +1,7 @@
 package com.challenge.users_register.controller;
 
 import com.challenge.users_register.dto.LoginRequest;
+import com.challenge.users_register.dto.LoginResponse;
 import com.challenge.users_register.model.User;
 import com.challenge.users_register.service.UserService;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,7 @@ public class AuthController {
                 userService.update(user);
             }
         }
-        return ResponseEntity.status(HttpStatus.OK).body(authenticationResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(authenticationResponse.getName(), authenticationResponse.isAuthenticated()));
     }
 }
 

@@ -54,4 +54,11 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public User(UUID id, String email, String password, List<Phone> phones) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.phones = phones;
+    }
 }
