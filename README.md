@@ -157,7 +157,7 @@ curl --location '0.0.0.0:8080/api/login' --data-raw '{
 
 ## Diagrama de Funcionamiento del Endpoint de Creación de Usuarios
 
-El siguiente diagrama describe el flujo básico para la creación de usuarios a través de un endpoint en una aplicación Spring Boot.
+El siguiente diagrama describe el flujo para la creación de usuarios a través del endpoint POST en una aplicación Spring Boot.
 
 ```plaintext
 Cliente             Controller     Service       Repository      Base de Datos
