@@ -47,7 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            //setForbiddenResponse(response);
             filterChain.doFilter(request, response);
         }
 
@@ -74,25 +73,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
-            setForbiddenResponse(response);
+            response.setStatus(HttpStatus.FORBIDDEN.value());
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
-    }
-
-    @SneakyThrows
-    private void setForbiddenResponse(HttpServletResponse response) {
-        ErrorResponse errorResponse = new ErrorResponse("Forbidden");
-
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.getWriter().write(convertObjectToJson(errorResponse));
-    }
-
-    @SneakyThrows
-    private String convertObjectToJson(Object object) {
-        if (object == null) {
-            return null;
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
     }
 }
