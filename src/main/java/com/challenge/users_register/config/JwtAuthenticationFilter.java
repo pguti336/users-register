@@ -1,12 +1,17 @@
 package com.challenge.users_register.config;
 
+import com.challenge.users_register.exception.ErrorResponse;
+import com.challenge.users_register.exception.InvalidJwtTokenException;
 import com.challenge.users_register.service.CustomUserDetailsService;
 import com.challenge.users_register.service.JwtService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +20,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
-import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -34,17 +37,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
     }
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            setForbiddenResponse(response);
             filterChain.doFilter(request, response);
-            return;
         }
 
         try {
@@ -70,7 +74,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
+            setForbiddenResponse(response);
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
+    }
+
+    @SneakyThrows
+    private void setForbiddenResponse(HttpServletResponse response) {
+        ErrorResponse errorResponse = new ErrorResponse("Forbidden");
+
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.getWriter().write(convertObjectToJson(errorResponse));
+    }
+
+    @SneakyThrows
+    private String convertObjectToJson(Object object) {
+        if (object == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
     }
 }

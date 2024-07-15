@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,5 +47,11 @@ public class User {
 
     public User() {
         this.active = true;
+    }
+
+    public User(UUID id, String email, String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
     }
 }

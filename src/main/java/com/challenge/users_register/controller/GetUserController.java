@@ -22,7 +22,7 @@ public class GetUserController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/internal/users/{id}")
     private ResponseEntity<?> getUser(@PathVariable String id) {
         Optional<User> optionalUser = userService.findById(UUID.fromString(id));
         if (optionalUser.isPresent()) {
