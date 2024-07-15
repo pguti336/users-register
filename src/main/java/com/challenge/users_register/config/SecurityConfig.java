@@ -34,7 +34,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.userDetailsService(customUserDetailsService)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/**"), new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/api-docs/**")).permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
